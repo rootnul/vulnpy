@@ -36,10 +36,22 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
-            - name: Set up Docker 
-              uses: docker-practice/actions-setup-docker@v1
-              with:
-                  docker_version: '29.0.4'
+            - name: Ensure Docker is available (safe)
+              run: |
+                # If docker is missing, attempt a minimal install (docker.io) without failing the job
+                if ! command -v docker >/dev/null 2>&1; then
+                  echo "Docker not found on runner; trying to install docker.io"
+                  sudo apt-get update || true
+                  sudo apt-get install -y docker.io || true
+                fi
+                echo "Docker version:"
+                docker --version || true
+                echo "Check /etc/docker/daemon.json if exists"
+                if [ -f /etc/docker/daemon.json ]; then
+                  sudo cat /etc/docker/daemon.json || true
+                else
+                  echo "/etc/docker/daemon.json: not present (not an error)"
+                fi
             - name: Build Docker image
               run: |
                   docker build -f Dockerfile -t myapp:latest .
