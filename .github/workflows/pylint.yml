@@ -23,7 +23,7 @@ jobs:
               run: |
                   bandit -r . -ll -ii -f json -o bandit-report.json
             - name: Upload Bandit report
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               if: always()
               with:
                   name: bandit-report
