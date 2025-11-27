@@ -21,7 +21,7 @@ jobs:
                   pip install bandit
             - name: Run Bandit SAST scan
               run: |
-                  bandit -r . -ll . -ii
+                  bandit -r . -ll -ii
 
 
 
